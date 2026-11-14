@@ -1,12 +1,29 @@
-# Fortnite Loot Tracker
+# Fortnite Chest Counter
 
-A Windows desktop app that counts chests searched or broken in saved Fortnite replays. It also tracks Sprite chests, ammo boxes and other containers, shows per-match history and recorded playtime, and includes a Pirate Token odds calculator.
+Count the chests you search or break in Fortnite. The tracker reads your saved replays and updates your totals after each recorded match.
 
-## Run on Windows
+[**Windows releases**](https://github.com/frogo084/Fortnite-Chest-Counter/releases) · Windows x64 · No installer or separate .NET download
 
-Extract the Windows x64 release ZIP and open `Fortnite Loot Tracker.exe`. Enable replay recording in Fortnite and keep the tracker open while playing. It checks your Windows account's Fortnite replay folder and updates when a recording finishes. You can choose another replay folder in Settings.
+![Playtime & Squad tab with fictional match totals and a sample teammate](docs/playtime-and-squad-example.png)
 
-**Teammate tracking is experimental.** In Playtime & Squad, save a teammate's replay name and double-click it to see shared matches. The app counts chest actions it can attribute to that teammate from your recording. Counts may be incomplete. “Not recorded” means no actions could be attributed from the available replay data.
+*Example with fictional data: Sample Teammate has 7 chests searched and 3 broken, for 10 recorded chest actions.*
+
+## Get started
+
+1. Open `Fortnite-Chest-Counter.exe` on a Windows x64 PC.
+2. Enable replay recording in Fortnite if it is off.
+3. Keep the tracker open while you play. It finds Fortnite’s default replay folder automatically. If you use another folder, choose it in the tracker’s Settings.
+
+## What it tracks
+
+- Regular and Sprite chests searched or broken, plus other recorded containers such as ammo boxes.
+- Match history, recorded playtime, and totals from a date you choose.
+- Pirate Token odds using your replay counts or numbers you enter.
+- **Experimental teammate tracking.** Save a teammate’s name in Playtime & Squad and double-click it to see shared matches. The tracker counts actions it can attribute from your saved replays. “Not recorded” means the replay did not show an attributable action; it does not establish that the teammate opened zero chests.
+
+## Privacy
+
+Your replays, saved teammate names, preferences, and match history stay on your PC. The tracker reads replays from disk and stores its own history under `%LOCALAPPDATA%\FortniteLootTracker`.
 
 ## Build from source
 
@@ -16,6 +33,4 @@ Use the .NET 10 SDK on Windows:
 dotnet publish Source/FortniteLootTracker.csproj -c Release -r win-x64 --self-contained true -o App -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
 ```
 
-Your replay files, saved names, preferences and match history stay on your PC. The app reads replays from disk and stores its own history under `%LOCALAPPDATA%\FortniteLootTracker`. It does not upload them.
-
-This is an unofficial fan-made app. Third-party notices are included in [PARSER-LICENSE.txt](PARSER-LICENSE.txt), [PHOSPHOR-LICENSE.txt](PHOSPHOR-LICENSE.txt), [FONT-LICENSE.txt](FONT-LICENSE.txt) and [DOTNET-NOTICES.txt](DOTNET-NOTICES.txt).
+Unofficial fan-made app. Third-party notices: [Replay parser](PARSER-LICENSE.txt), [Phosphor icons](PHOSPHOR-LICENSE.txt), [font](FONT-LICENSE.txt), and [.NET](DOTNET-NOTICES.txt).
