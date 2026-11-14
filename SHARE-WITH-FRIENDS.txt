@@ -1,0 +1,82 @@
+FORTNITE LOOT TRACKER 3.1.1 - WINDOWS x64
+
+1. Extract the whole ZIP to a folder on your PC.
+2. Open Fortnite Loot Tracker.exe.
+3. Enable Fortnite replay recording, play a match, and keep this app open.
+
+The app finds YOUR Windows account's Fortnite replay folder automatically.
+For a different location, use the settings gear > Choose folder.
+The first import may take a few minutes. Counts update after a replay finishes.
+No separate .NET installation, sign-in, or administrator access is needed.
+Supported package: Windows 10/11 on Intel/AMD x64. macOS builds are not included.
+
+OVERVIEW: Your container total, chest artwork, latest match and live monitoring.
+HISTORY: Select a match for container types; Export CSV saves your breakdowns.
+TOKEN ODDS: Switch between Rest of season and My odds so far. Enter playtime,
+Treasure Hours and party scenarios. Replay counts fill your own chest total.
+The calculator shows both '1 in X' and percentage results. Rates are editable.
+Replay counts update as new matches are imported. Use my replay counts restores
+your own searched + broken chest total and Solo, without multiplying it by a party estimate.
+Typing your own chest count keeps a manual scenario until you use replay counts
+again. Party buttons are optional estimates, not measured teammate chest totals.
+SETTINGS: Replay folder, scan now, subtle animations and always on top.
+
+PLAYTIME & SQUAD: Recorded replay time in hours and minutes, with your own
+regular + broken + Sprite chest total. This is recording duration, including
+any recorded spectating; it is not time alive or all your Fortnite playtime.
+Choose Count from > Apply to filter totals, history, CSV exports, replay-based
+odds and this tab from that local calendar day onward. All time clears it.
+The date and saved names persist when you close the app.
+Type part of a teammate's name to see matching names found in your replays.
+Choose a suggestion, then Save teammate. Arrow keys and Enter also select names.
+You can also type an exact Epic display name. Partial names with detected matches
+prompt you to select the recorded name, so prefixes do not hide their counts.
+The table shows
+shared recorded matches and observed regular/Sprite chests searched or broken
+by that player on your team. Double-click a saved name, or select it and press
+Enter, to see their searched/broken counts per shared match. This history uses
+the same start-date filter. Right-click a saved row to remove the name.
+Teammate tracking is experimental. Counts depend on what your replay recorded.
+Distant actions, anonymous
+names and older deleted source replays may be unavailable. 'Not recorded' means
+no attributable chest actions were available; it does not prove zero openings.
+This does not monitor friends while they play without you. Names stay local.
+Version 3.1 reads additional chest updates from numbered map containers and
+updates whose field descriptions arrive late. Available replays rescan once.
+Cached history for recordings no longer on disk keeps its previous counts.
+
+Totals include containers searched and broken containers attributed to you by
+the replay. History and CSV export separate Searched from Broken. Recorded
+vehicle hits can count under Broken, along with other destruction methods.
+This does not identify the exact cause of destruction. Unknown destroyers and
+destructions omitted by the replay cannot be counted. A searched container is
+not counted a second time just because it is later destroyed.
+Individual loot pieces are not counted.
+Replay formats can change after Fortnite updates. Unavailable matches are marked
+and excluded from totals. Odds do not detect whether a token actually dropped.
+The calculator assumes independent rolls. Treasure Hours are entered manually.
+Party scenarios assume equal chest counts and shared rewards. This is a planning
+assumption. Past misses do not increase the chance on the next chest.
+Odds autofill includes searched + attributed broken chests, including Sprite
+chests. Ammo boxes and other containers are excluded. The model assumes the same
+drop rate applies to broken chests; that eligibility is not verified.
+The reference rate is 1 in 137,500, not a live feed of Epic event settings.
+Default forecast days count to December 5, 2026; edit the days for your own plan.
+Rate reference: https://themathbehindeverything.com/fortnite-pirate-token/
+
+PRIVACY / SHARING
+This ZIP contains only the application, this guide and open-source licenses.
+It does NOT contain the creator's replay files, match history, settings or login.
+Your history, start date, saved teammate names and settings are stored on your PC at:
+%LOCALAPPDATA%/FortniteLootTracker
+The app reads replay files without changing them or uploading them.
+To share it, upload the ZIP to a file-sharing service you use and send its link.
+Re-extract a newer package when you want to update; saved history stays on the PC.
+
+CREDITS
+Unofficial fan-made app, not affiliated with or endorsed by Epic Games.
+Replay reader adapted from rossalv/fortnite-chest-counter (MIT).
+Uses Unreal.Core / Unreal.Encryption 3.1.0 and the .NET desktop runtime.
+Phosphor settings, calendar, navigation and search icons: MIT.
+Montserrat fonts: SIL Open Font License.
+Licenses and notices are included alongside the application.

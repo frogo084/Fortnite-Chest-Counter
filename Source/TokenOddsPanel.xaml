@@ -1,0 +1,59 @@
+<UserControl x:Class="LootTracker.TokenOddsPanel"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Background="#080808">
+ <UserControl.Resources>
+  <Style x:Key="SmallLabel" TargetType="TextBlock"><Setter Property="FontSize" Value="17"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="#B9B4AA"/><Setter Property="Margin" Value="0,0,0,10"/></Style>
+  <Style x:Key="Choice" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="FontSize" Value="18"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Padding" Value="10,15"/><Setter Property="Margin" Value="0,0,10,0"/></Style>
+ </UserControl.Resources>
+ <Grid Margin="70,43,65,30">
+  <Grid.ColumnDefinitions><ColumnDefinition Width="620"/><ColumnDefinition Width="65"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+  <StackPanel Margin="0,12,0,0">
+   <TextBlock Text="Pirate token odds" FontSize="43" FontWeight="Bold"/>
+   <TextBlock x:Name="ModeSubtitle" Text="Plan the rest of your season." FontSize="24" Foreground="#B9B4AA" Margin="0,15,0,45"/>
+   <Viewbox Height="145" MaxWidth="600" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"><TextBlock x:Name="OddsRatio" Text="—" FontSize="112" FontWeight="Bold" Foreground="{DynamicResource MetallicText}"/></Viewbox>
+   <TextBlock x:Name="OddsPercentage" Text="" FontSize="36" Foreground="{DynamicResource Gold}" Margin="0,8,0,16"/>
+   <TextBlock x:Name="ResultDescription" Text="Enter your plan to see your odds." FontSize="25" TextWrapping="Wrap" MaxWidth="590" HorizontalAlignment="Left"/>
+   <Border BorderBrush="#51432A" BorderThickness="0,1,0,0" Margin="0,35,0,25"/>
+   <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="160"/><ColumnDefinition Width="190"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <StackPanel><TextBlock x:Name="StatOneLabel" Text="MATCHES" Style="{StaticResource SmallLabel}"/><Viewbox Height="60" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"><TextBlock x:Name="StatOne" Text="—" FontSize="42" FontWeight="Bold" Foreground="{DynamicResource Gold}"/></Viewbox></StackPanel>
+    <StackPanel Grid.Column="1"><TextBlock x:Name="StatTwoLabel" Text="CHESTS" Style="{StaticResource SmallLabel}"/><Viewbox Height="60" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"><TextBlock x:Name="StatTwo" Text="—" FontSize="42" FontWeight="Bold" Foreground="{DynamicResource Gold}"/></Viewbox></StackPanel>
+    <StackPanel Grid.Column="2"><TextBlock x:Name="StatThreeLabel" Text="MATCHES FOR 50%" Style="{StaticResource SmallLabel}"/><Viewbox Height="60" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"><TextBlock x:Name="StatThree" Text="—" FontSize="42" FontWeight="Bold" Foreground="{DynamicResource Gold}"/></Viewbox></StackPanel>
+   </Grid>
+   <TextBlock x:Name="ResultNote" TextWrapping="Wrap" FontSize="21" Foreground="#B9B4AA" Margin="0,30,0,0" MaxWidth="590" HorizontalAlignment="Left"/>
+   <TextBlock x:Name="OddsError" TextWrapping="Wrap" FontSize="22" Foreground="#FFB187" Margin="0,24,0,0" MaxWidth="590" HorizontalAlignment="Left"/>
+  </StackPanel>
+  <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,8,0">
+   <StackPanel>
+    <UniformGrid Columns="2" Margin="0,0,0,24"><Button x:Name="ForecastMode" Content="REST OF SEASON" Style="{StaticResource Choice}" Click="ForecastClicked"/><Button x:Name="PastMode" Content="MY ODDS SO FAR" Style="{StaticResource Choice}" Click="PastClicked" Margin="0"/></UniformGrid>
+    <Grid x:Name="ForecastFields">
+     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+     <Grid.RowDefinitions><RowDefinition Height="110"/><RowDefinition Height="110"/><RowDefinition Height="110"/></Grid.RowDefinitions>
+     <StackPanel><TextBlock Text="YOU PLAY · HOURS A DAY" Style="{StaticResource SmallLabel}"/><TextBox x:Name="HoursInput" Text="3" TextChanged="InputChanged" AutomationProperties.Name="Hours played per day"/></StackPanel>
+     <StackPanel Grid.Column="2"><TextBlock Text="FOR · DAYS" Style="{StaticResource SmallLabel}"/><TextBox x:Name="DaysInput" Text="24" TextChanged="InputChanged" AutomationProperties.Name="Planned days"/></StackPanel>
+     <StackPanel Grid.Row="1"><TextBlock Text="CHESTS PER MATCH" Style="{StaticResource SmallLabel}"/><TextBox x:Name="AverageInput" Text="25" TextChanged="InputChanged" AutomationProperties.Name="Chests per match"/></StackPanel>
+     <StackPanel Grid.Row="1" Grid.Column="2"><TextBlock Text="MATCH LENGTH · MINUTES" Style="{StaticResource SmallLabel}"/><TextBox x:Name="MinutesInput" Text="20" TextChanged="InputChanged" AutomationProperties.Name="Minutes per match"/></StackPanel>
+     <StackPanel Grid.Row="2"><TextBlock Text="TREASURE HOURS · HOURS" Style="{StaticResource SmallLabel}"/><TextBox x:Name="BoostHoursInput" Text="0" TextChanged="InputChanged" AutomationProperties.Name="Planned Treasure Hours"/></StackPanel>
+    </Grid>
+    <StackPanel x:Name="PastFields" Visibility="Collapsed">
+     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <StackPanel><TextBlock Text="YOU'VE OPENED · CHESTS" Style="{StaticResource SmallLabel}"/><TextBox x:Name="OpenedInput" Text="0" TextChanged="InputChanged" AutomationProperties.Name="Chests already opened"/></StackPanel>
+      <StackPanel Grid.Column="2"><TextBlock Text="IN TREASURE HOURS" Style="{StaticResource SmallLabel}"/><TextBox x:Name="BoostedInput" Text="0" TextChanged="InputChanged" AutomationProperties.Name="Chests opened during Treasure Hours"/></StackPanel>
+     </Grid>
+     <Button Content="Use my replay counts" Click="ReplayCountsClicked" FontSize="20" Padding="18,13" HorizontalAlignment="Left" Margin="0,18,0,28"/>
+     <TextBlock x:Name="ReplayCountStatus" FontSize="17" Foreground="#B9B4AA" TextWrapping="Wrap" Margin="0,-14,0,20"/>
+    </StackPanel>
+    <TextBlock Text="TREASURE HOURS BOOST" Style="{StaticResource SmallLabel}"/>
+    <UniformGrid Columns="2" Margin="0,0,0,24"><Button x:Name="BoostOne" Content="1.5×" Tag="1.5" Click="BoostClicked" Style="{StaticResource Choice}"/><Button x:Name="BoostTwo" Content="2×" Tag="2" Click="BoostClicked" Style="{StaticResource Choice}" Margin="0"/></UniformGrid>
+    <TextBlock Text="PARTY ESTIMATE · OPTIONAL" Style="{StaticResource SmallLabel}"/>
+    <UniformGrid Columns="4" Margin="0,0,0,24"><Button x:Name="Solo" Content="SOLO" Tag="1" Click="PartyClicked" Style="{StaticResource Choice}"/><Button x:Name="Duo" Content="DUO" Tag="2" Click="PartyClicked" Style="{StaticResource Choice}"/><Button x:Name="Trio" Content="TRIO" Tag="3" Click="PartyClicked" Style="{StaticResource Choice}"/><Button x:Name="Squad" Content="SQUAD" Tag="4" Click="PartyClicked" Style="{StaticResource Choice}" Margin="0"/></UniformGrid>
+    <Grid Margin="0,0,0,20"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions><TextBlock Text="Base rate · 1 in" FontSize="22" Foreground="#B9B4AA" VerticalAlignment="Center"/><TextBox x:Name="RateInput" Text="137500" Grid.Column="1" TextChanged="InputChanged" AutomationProperties.Name="Base rate denominator"/></Grid>
+    <Button Content="How the estimates work" Click="HelpClicked" FontSize="19" Padding="0,8" BorderThickness="0" HorizontalAlignment="Left"/>
+    <TextBlock x:Name="HelpText" Visibility="Collapsed" FontSize="19" Foreground="#B9B4AA" TextWrapping="Wrap" Margin="0,12,0,16" Text="Independent chest rolls are combined to estimate at least one drop. Past misses do not improve the next chest. Treasure Hours are entered manually. Replay autofill includes your searched and attributed broken chests, including Sprite chests. The model assumes the entered drop rate also applies to broken chests; eligibility is not verified. Party scenarios assume equal chest counts and shared rewards."/>
+    <TextBlock FontSize="18" Foreground="#B9B4AA" TextWrapping="Wrap" Text="Includes your searched + broken chests and Sprite chests. Excludes ammo and other containers. Odds assume the same rate for broken chests; party totals are estimates." Margin="0,12,0,10"/>
+    <TextBlock FontSize="18"><Hyperlink Click="ReferenceClicked" Foreground="{DynamicResource Gold}">Drop-rate reference</Hyperlink></TextBlock>
+   </StackPanel>
+  </ScrollViewer>
+ </Grid>
+</UserControl>

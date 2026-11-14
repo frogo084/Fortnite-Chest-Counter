@@ -1,0 +1,20 @@
+<Window x:Class="LootTracker.TeammateHistoryWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Teammate match history" Width="1040" Height="760" MinWidth="780" MinHeight="540" WindowStartupLocation="CenterOwner" Background="#080808" Foreground="#EEE9DF" FontFamily="Assets/#Montserrat" UseLayoutRounding="True">
+ <Viewbox Stretch="Uniform"><Grid Width="1100" Height="740" Margin="30">
+  <Grid.RowDefinitions><RowDefinition Height="100"/><RowDefinition Height="100"/><RowDefinition Height="*"/><RowDefinition Height="70"/></Grid.RowDefinitions>
+  <StackPanel><TextBlock x:Name="TeammateHeading" FontSize="38" FontWeight="Bold" TextTrimming="CharacterEllipsis"/><TextBlock x:Name="HistoryScope" FontSize="19" Foreground="#B9B4AA" Margin="0,12,0,0"/></StackPanel>
+  <Border Grid.Row="1" BorderBrush="#51432A" BorderThickness="0,0,0,1" Margin="0,0,0,20"><StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+   <TextBlock x:Name="SearchedTotal" Foreground="#F2C968" FontSize="31" FontWeight="SemiBold"/><TextBlock Text=" searched" FontSize="23" Margin="8,4,32,0"/>
+   <TextBlock x:Name="BrokenTotal" Foreground="#F2C968" FontSize="31" FontWeight="SemiBold"/><TextBlock Text=" broken" FontSize="23" Margin="8,4,32,0"/>
+   <TextBlock x:Name="CombinedTotal" Foreground="#F2C968" FontSize="31" FontWeight="SemiBold"/><TextBlock Text=" total" FontSize="23" Margin="8,4,0,0"/>
+  </StackPanel></Border>
+  <Grid Grid.Row="2"><DataGrid x:Name="TeammateMatches" RowHeight="58"><DataGrid.Columns>
+   <DataGridTextColumn Header="Shared match" Binding="{Binding Date}" Width="2.4*"/>
+   <DataGridTextColumn Header="Searched" Binding="{Binding Searched}" Width="1.65*"/>
+   <DataGridTextColumn Header="Broken" Binding="{Binding Broken}" Width="0.95*"/>
+   <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="0.8*"/>
+   <DataGridTextColumn Header="Replay time" Binding="{Binding Duration}" Width="1.5*"/>
+  </DataGrid.Columns></DataGrid><TextBlock x:Name="NoSharedMatches" Text="No shared replays found in this date range." FontSize="23" Foreground="#B9B4AA" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/></Grid>
+  <Grid Grid.Row="3" Margin="0,18,0,0"><TextBlock Text="Experimental · Observed regular + Sprite chests · Counts may be incomplete" FontSize="18" Foreground="#B9B4AA" VerticalAlignment="Center"/><Button Content="Close" HorizontalAlignment="Right" Padding="24,10" Click="CloseHistory" IsCancel="True"/></Grid>
+ </Grid></Viewbox>
+</Window>
