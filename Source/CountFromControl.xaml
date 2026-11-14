@@ -1,0 +1,39 @@
+<UserControl x:Class="LootTracker.CountFromControl"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <UserControl.Resources>
+  <ResourceDictionary>
+   <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="VaultControls.xaml"/>
+   </ResourceDictionary.MergedDictionaries>
+   <Style TargetType="DatePickerTextBox">
+    <Setter Property="Foreground" Value="#EEE9DF"/>
+    <Setter Property="Background" Value="#15140F"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Template">
+     <Setter.Value>
+      <ControlTemplate TargetType="DatePickerTextBox">
+       <Grid Background="{TemplateBinding Background}" Margin="8,3">
+        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+        <ContentControl x:Name="PART_Watermark" Foreground="#B9B4AA" FontSize="20" IsHitTestVisible="False" Focusable="False" VerticalAlignment="Center" Visibility="Collapsed"/>
+       </Grid>
+       <ControlTemplate.Triggers>
+        <Trigger Property="Text" Value=""><Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/></Trigger>
+       </ControlTemplate.Triggers>
+      </ControlTemplate>
+     </Setter.Value>
+    </Setter>
+   </Style>
+  </ResourceDictionary>
+ </UserControl.Resources>
+ <StackPanel>
+  <StackPanel Orientation="Horizontal">
+   <TextBlock Text="Count from" FontSize="24" VerticalAlignment="Center" Margin="0,0,16,0"/>
+   <DatePicker x:Name="CountFromPicker" Style="{StaticResource VaultDatePicker}" Width="260" Height="55" FontSize="23"
+    SelectedDateFormat="Short" DateValidationError="InvalidDate" AutomationProperties.Name="Count matches from this date"/>
+   <Button x:Name="ApplyButton" Content="Apply" Style="{StaticResource GoldAction}" Click="ApplyDate" Margin="16,0,0,0"/>
+   <Button x:Name="AllTimeButton" Content="All time" Click="ClearDate" FontSize="20" BorderThickness="0" Padding="15,12" Margin="5,0,0,0"/>
+  </StackPanel>
+  <TextBlock x:Name="DateStatus" Foreground="#F2C968" FontSize="18" Margin="0,6,0,0" AutomationProperties.LiveSetting="Polite"/>
+ </StackPanel>
+</UserControl>

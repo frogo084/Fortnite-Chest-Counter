@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>FortniteLootTracker.ReplayReader</AssemblyName>
     <ApplicationIcon>Assets/app.ico</ApplicationIcon>
-    <Version>3.1.1</Version>
+    <Version>3.1.2</Version>
     <Product>Fortnite Loot Tracker</Product>
     <Description>Local Fortnite replay container tracker</Description>
   </PropertyGroup>

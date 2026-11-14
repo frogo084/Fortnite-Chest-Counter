@@ -21,10 +21,14 @@ internal static class VaultProgram
             ChestReader.SelfCheck(); ReplayTracker.SelfCheck(); LootTracker.TokenOdds.SelfCheck();
             if (args[0] == "--verify") Verification.Run(report).GetAwaiter().GetResult();
             var application = new System.Windows.Application();
-            var window = new VaultWindow(report + ".unused.png");
+            var directory = report + ".ui-fixture";
+            var fixture = Verification.CheckTracking(directory);
+            var window = new VaultWindow(fixture, report + ".unused.png");
             window.VerifyReplayPanel();
-            window.VerifyTrackingPanel(Verification.CheckTracking(report + ".ui-fixture")); window.Close();
-            File.WriteAllText(report + ".ui.txt", "PASS: fresh personal replay counts, solo reset, live updates, manual scenario preservation, past and forecast output, recorded playtime, date picker, All time, save/remove teammate controls using isolated sample data.");
+            window.VerifyTrackingPanel(fixture);
+            window.VerifyOverviewDate(directory);
+            window.Close();
+            File.WriteAllText(report + ".ui.txt", "PASS: replay odds, recorded playtime, shared Overview and Playtime date, inclusive totals, restart persistence, All time, and teammate controls using isolated sample data.");
             return;
         }
         if (args.Length == 2 && args[0] is "--capture" or "--capture-forecast" or "--capture-past" or "--capture-history" or "--capture-personal" or "--capture-squad" or "--capture-controls")

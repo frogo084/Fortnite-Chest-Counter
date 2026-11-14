@@ -111,7 +111,15 @@ internal sealed class ReplayTracker
     public bool InRange(MatchResult r) => !CountFrom.HasValue || (r.MatchStartUtc ?? r.LastWriteUtc).ToLocalTime().Date >= CountFrom.Value;
     public void SetCountFrom(DateTime? date)
     {
-        preferences.CountFrom = date?.Date; SaveTracking(); Changed?.Invoke();
+        var previous = preferences.CountFrom;
+        preferences.CountFrom = date?.Date;
+        try { SaveTracking(); }
+        catch
+        {
+            preferences.CountFrom = previous;
+            throw;
+        }
+        Changed?.Invoke();
     }
     public void SaveTeammate(string name)
     {

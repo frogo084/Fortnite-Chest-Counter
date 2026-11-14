@@ -1,4 +1,3 @@
-using System.Globalization;
 using Wpf = System.Windows;
 using Controls = System.Windows.Controls;
 using Input = System.Windows.Input;
@@ -11,13 +10,17 @@ public partial class PlaytimePanel : Controls.UserControl
     bool changingSearch;
     IReadOnlyList<string> detectedNames = Array.Empty<string>();
     public PlaytimePanel() => InitializeComponent();
+    internal DateTime? DisplayedStartDate => CountFrom.Picker.SelectedDate;
     internal void Bind(ReplayTracker value)
     {
-        tracker = value; CountFromPicker.SelectedDate = tracker.CountFrom; Refresh();
+        tracker = value;
+        CountFrom.Bind(value);
+        Refresh();
     }
     internal void Refresh()
     {
         if (tracker == null) return;
+        CountFrom.Refresh();
         var matches = tracker.CountedMatches.ToList();
         var time = tracker.RecordedTime;
         PlaytimeText.Text = $"{(long)time.TotalHours:N0}h {time.Minutes:00}m";
@@ -29,23 +32,6 @@ public partial class PlaytimePanel : Controls.UserControl
         UpdateSuggestions(false);
         EmptyRoster.Visibility = tracker.SavedTeammates.Count == 0 ? Wpf.Visibility.Visible : Wpf.Visibility.Collapsed;
     }
-    void ApplyDate(object sender, Wpf.RoutedEventArgs e)
-    {
-        if (tracker == null) return;
-        DateTime? selected = null;
-        if (!string.IsNullOrWhiteSpace(CountFromPicker.Text))
-        {
-            if (!DateTime.TryParse(CountFromPicker.Text, CultureInfo.CurrentCulture, DateTimeStyles.None, out var date)) { PanelStatus.Text = "Enter a valid start date, or choose All time."; return; }
-            selected = date.Date;
-        }
-        try { tracker.SetCountFrom(selected); CountFromPicker.SelectedDate = selected; PanelStatus.Text = "Date filter applied to totals, history, playtime and odds replay counts."; Refresh(); }
-        catch (Exception ex) { PanelStatus.Text = "Could not save the start date: " + ex.Message; }
-    }
-    void ClearDate(object sender, Wpf.RoutedEventArgs e)
-    {
-        CountFromPicker.SelectedDate = null; CountFromPicker.Text = ""; ApplyDate(sender, e);
-    }
-    void InvalidDate(object? sender, Controls.DatePickerDateValidationErrorEventArgs e) { e.ThrowException = false; PanelStatus.Text = "Enter a valid start date."; }
     void UpdateSuggestions(bool open)
     {
         if (NameSuggestions == null || changingSearch) return;
@@ -142,7 +128,9 @@ public partial class PlaytimePanel : Controls.UserControl
         {
             Bind(fixture);
             if (PlaytimeText.Text != "26h 45m") throw new InvalidOperationException("Playtime display wraps after 24 hours.");
-            CountFromPicker.SelectedDate = new DateTime(2026, 1, 2); ApplyDate(this, new());
+            CountFrom.Picker.SelectedDate = new DateTime(2026, 1, 2);
+            CountFrom.ApplyButton.RaiseEvent(new Wpf.RoutedEventArgs(Controls.Primitives.ButtonBase.ClickEvent));
+            Refresh();
             if (PlaytimeText.Text != "25h 45m" || !MinutesText.Text.Contains("1,545") || !ChestCountText.Text.StartsWith("4 chests"))
                 throw new InvalidOperationException("Date picker did not update playtime and own chests.");
             if (NameSuggestions.Items.Count != 1) throw new InvalidOperationException("Replay teammate discovery did not populate the selector.");
@@ -157,7 +145,8 @@ public partial class PlaytimePanel : Controls.UserControl
             if (!fixture.SavedTeammates.Contains("UI Sample")) throw new InvalidOperationException("Save teammate control failed.");
             TeammatesGrid.SelectedItem = fixture.TeammateRows().Last(); RemoveName(this, new());
             if (fixture.SavedTeammates.Contains("UI Sample")) throw new InvalidOperationException("Remove teammate control failed.");
-            ClearDate(this, new());
+            CountFrom.AllTimeButton.RaiseEvent(new Wpf.RoutedEventArgs(Controls.Primitives.ButtonBase.ClickEvent));
+            Refresh();
             if (fixture.CountFrom != null || PlaytimeText.Text != "26h 45m") throw new InvalidOperationException("All time control failed.");
         }
         finally { if (original != null) Bind(original); }
@@ -165,9 +154,10 @@ public partial class PlaytimePanel : Controls.UserControl
     internal async Task CaptureControls(string path)
     {
         if (tracker == null) return;
-        CountFromPicker.IsDropDownOpen = true;
+        var picker = CountFrom.Picker;
+        picker.IsDropDownOpen = true;
         await Dispatcher.InvokeAsync(() => { }, System.Windows.Threading.DispatcherPriority.ContextIdle);
-        var popup = (Controls.Primitives.Popup)CountFromPicker.Template.FindName("PART_Popup", CountFromPicker);
+        var popup = (Controls.Primitives.Popup)picker.Template.FindName("PART_Popup", picker);
         var calendar = (Controls.Calendar)popup.Child;
         calendar.ApplyTemplate(); calendar.UpdateLayout();
         var item = (Controls.Primitives.CalendarItem)calendar.Template.FindName("PART_CalendarItem", calendar);
@@ -182,11 +172,11 @@ public partial class PlaytimePanel : Controls.UserControl
         calendar.DisplayMode = Controls.CalendarMode.Month;
         var selected = calendar.SelectedDate ?? calendar.DisplayDate.Date;
         calendar.SelectedDate = selected.AddDays(1);
-        if (CountFromPicker.SelectedDate != selected.AddDays(1)) throw new InvalidOperationException("Custom calendar selection did not reach the date field.");
+        if (picker.SelectedDate != selected.AddDays(1)) throw new InvalidOperationException("Custom calendar selection did not reach the date field.");
         calendar.SelectedDate = selected;
         await Dispatcher.InvokeAsync(() => { }, System.Windows.Threading.DispatcherPriority.ContextIdle);
         SaveControlImage(calendar, path + ".calendar.png");
-        CountFromPicker.IsDropDownOpen = false;
+        picker.IsDropDownOpen = false;
         var recordedName = tracker.SavedTeammates.FirstOrDefault(n => detectedNames.Contains(n)) ?? detectedNames.FirstOrDefault();
         if (recordedName != null)
         {

@@ -28,6 +28,7 @@ public partial class VaultWindow : Wpf.Window
         this.capturePath = capturePath;
         this.captureMode = captureMode;
         InitializeComponent();
+        OverviewCountFrom.Bind(tracker);
         PlaytimePage.Bind(tracker);
         Icon = Imaging.BitmapFrame.Create(new Uri("pack://application:,,,/Assets/app-icon.png"));
         AnimationsToggle.IsChecked = Wpf.SystemParameters.ClientAreaAnimation;
@@ -93,6 +94,7 @@ public partial class VaultWindow : Wpf.Window
         if (!ready) return;
         var good = tracker.CountedMatches.OrderByDescending(r => r.MatchStartUtc ?? r.LastWriteUtc).ToList();
         FillReplayOdds();
+        OverviewCountFrom.Refresh();
         PlaytimePage.Refresh();
         var total = good.Sum(r => r.ContainersAccessed);
         if (total != targetCount || TotalText.Text == "0")
@@ -212,6 +214,36 @@ public partial class VaultWindow : Wpf.Window
     }
     internal void VerifyReplayPanel() => OddsPage.VerifyReplayBinding();
     internal void VerifyTrackingPanel(ReplayTracker fixture) => PlaytimePage.VerifyBinding(fixture);
+    internal void VerifyOverviewDate(string directory)
+    {
+        if (FindName("OverviewCountFrom") is not Wpf.FrameworkElement control
+            || control.FindName("CountFromPicker") is not Controls.DatePicker picker
+            || control.FindName("ApplyButton") is not Controls.Button apply
+            || control.FindName("AllTimeButton") is not Controls.Button allTime)
+            throw new InvalidOperationException("Overview is missing its count start date controls.");
+
+        ready = true;
+        UpdateView();
+        var start = new DateTime(2026, 1, 2);
+        picker.SelectedDate = start;
+        apply.RaiseEvent(new Wpf.RoutedEventArgs(Controls.Primitives.ButtonBase.ClickEvent));
+        if (ChestsText.Text != "2" || SpritesText.Text != "2" || AmmoText.Text != "2"
+            || !MatchesText.Text.Contains("SINCE") || PlaytimePage.DisplayedStartDate != start)
+            throw new InvalidOperationException("Overview date did not update the totals and persist.");
+
+        var reopened = new VaultWindow(new ReplayTracker(directory), "verify-overview-date");
+        try
+        {
+            if (reopened.OverviewCountFrom.Picker.SelectedDate != start || reopened.PlaytimePage.DisplayedStartDate != start)
+                throw new InvalidOperationException("The saved date was not restored in both tabs.");
+        }
+        finally { reopened.Close(); }
+
+        allTime.RaiseEvent(new Wpf.RoutedEventArgs(Controls.Primitives.ButtonBase.ClickEvent));
+        if (ChestsText.Text != "3" || picker.SelectedDate != null || PlaytimePage.DisplayedStartDate != null
+            || new ReplayTracker(directory).CountFrom != null)
+            throw new InvalidOperationException("Overview All time did not restore totals and persist.");
+    }
     internal sealed class MatchRow
     {
         public MatchResult Result { get; }

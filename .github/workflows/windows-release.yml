@@ -32,9 +32,14 @@ jobs:
             throw 'Standalone executable failed its self-test.'
           }
           Get-Content publish/self-test-result.txt
+          $ui = Start-Process -FilePath ./publish/Fortnite-Chest-Counter.exe -ArgumentList '--verify-ui', 'publish/release-check' -Wait -PassThru
+          if ($ui.ExitCode -ne 0 -or !(Test-Path publish/release-check.ui.txt)) {
+            throw 'Standalone executable failed its UI verification.'
+          }
+          Get-Content publish/release-check.ui.txt
       - name: Publish on GitHub Releases
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v3.1.1 publish/Fortnite-Chest-Counter.exe --target $env:GITHUB_SHA --title "Fortnite Chest Counter 3.1.1" --notes "Download and run Fortnite-Chest-Counter.exe on Windows x64. The app includes .NET. It counts chests searched or broken in saved replays. Teammate tracking is experimental and may be incomplete. Replays and match history stay on your PC. Third-party notices are in the README."
+          gh release create v3.1.2 publish/Fortnite-Chest-Counter.exe --target $env:GITHUB_SHA --title "Fortnite Chest Counter 3.1.2" --notes "Pick Count from on Overview or Playtime & Squad, then click Apply to save the start date. All time restores every recorded match. Download and run Fortnite-Chest-Counter.exe on Windows x64. The app includes .NET. It counts chests searched or broken in saved replays. Teammate tracking is experimental and may be incomplete. Replays and match history stay on your PC. Third-party notices are in the README."

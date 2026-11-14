@@ -65,7 +65,7 @@
                 </Grid>
             </Border>
             <Grid Grid.Row="1" x:Name="OverviewPage">
-                <Grid.RowDefinitions><RowDefinition Height="480"/><RowDefinition Height="110"/><RowDefinition Height="*"/><RowDefinition Height="120"/><RowDefinition Height="158"/></Grid.RowDefinitions>
+                <Grid.RowDefinitions><RowDefinition Height="480"/><RowDefinition Height="110"/><RowDefinition Height="*"/><RowDefinition Height="120"/><RowDefinition Height="114"/></Grid.RowDefinitions>
                 <Grid Margin="80,35,45,0">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="740"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center" Panel.ZIndex="1">
@@ -89,6 +89,7 @@
                     <Border Width="1" Height="40" Background="#8B7038" Margin="0,0,56,0"/>
                     <TextBlock Text="Other" FontSize="32" VerticalAlignment="Center"/><TextBlock x:Name="OtherText" Text="0" FontSize="46" FontWeight="SemiBold" Foreground="{StaticResource Gold}" Margin="18,0,0,0"/>
                 </StackPanel></Viewbox>
+                <local:CountFromControl x:Name="OverviewCountFrom" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,0,0,0"/>
                 <Border Grid.Row="3" BorderBrush="{StaticResource Line}" BorderThickness="0,1" Margin="55,0">
                     <Grid>
                         <Grid.ColumnDefinitions><ColumnDefinition Width="250"/><ColumnDefinition Width="170"/><ColumnDefinition Width="*"/><ColumnDefinition Width="240"/><ColumnDefinition Width="210"/></Grid.ColumnDefinitions>
@@ -125,7 +126,7 @@
                     <CheckBox x:Name="TopmostToggle" Content="Keep app on top" Click="TopmostChanged"/>
                     <TextBlock Text="Your replays and match history stay on this PC." Style="{StaticResource Quiet}" Margin="0,50,0,14"/>
                     <TextBlock Text="Counts searched containers and broken containers attributed to you. Vehicle hits count when recorded; unknown destroyers are excluded. Broken does not identify the destruction method." FontSize="22" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/>
-                    <TextBlock Text="Fortnite Loot Tracker 3.1.1 · Unofficial fan-made app" FontSize="21" Foreground="#B9B4AA" Margin="0,25,0,0"/>
+                    <TextBlock Text="Fortnite Loot Tracker 3.1.2 · Unofficial fan-made app" FontSize="21" Foreground="#B9B4AA" Margin="0,25,0,0"/>
                     <TextBlock x:Name="SettingsStatus" TextWrapping="Wrap" FontSize="22" Foreground="{StaticResource Gold}" Margin="0,35,0,0"/>
                 </StackPanel>
             </Grid>
