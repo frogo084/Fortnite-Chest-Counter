@@ -2,7 +2,7 @@
 
 Count the chests you search or break in Fortnite. The tracker reads your saved replays and updates your totals after each recorded match.
 
-[**Windows releases**](https://github.com/frogo084/Fortnite-Chest-Counter/releases) · Windows x64 · No installer or separate .NET download
+[**Download for Windows (.exe)**](https://github.com/frogo084/Fortnite-Chest-Counter/releases/latest/download/Fortnite-Chest-Counter.exe) · Windows x64 · No installer or separate .NET download
 
 ![Playtime & Squad tab with fictional match totals and a sample teammate](docs/playtime-and-squad-example.png)
 
@@ -10,7 +10,7 @@ Count the chests you search or break in Fortnite. The tracker reads your saved r
 
 ## Get started
 
-1. Open `Fortnite-Chest-Counter.exe` on a Windows x64 PC.
+1. Download `Fortnite-Chest-Counter.exe` using the link above and open it.
 2. Enable replay recording in Fortnite if it is off.
 3. Keep the tracker open while you play. It finds Fortnite’s default replay folder automatically. If you use another folder, choose it in the tracker’s Settings.
 
