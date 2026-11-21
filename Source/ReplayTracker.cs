@@ -1,7 +1,7 @@
 using System.Text.Json;
 using ChestReplayReader;
 
-internal sealed class ReplayTracker
+internal sealed partial class ReplayTracker
 {
     readonly string dataDir;
     readonly Dictionary<string, (long, DateTime)> stable = new(StringComparer.OrdinalIgnoreCase);
@@ -23,7 +23,7 @@ internal sealed class ReplayTracker
     public bool Stopped { get; set; }
     public event Action? Changed;
     public event Action<MatchResult>? NewMatch;
-    string Store => Path.Combine(dataDir, "history.json");
+    string Store => Path.Combine(dataDir, "data.json");
 
     public ReplayTracker(string? dataDirectory = null, string? replayFolder = null)
     {
@@ -44,12 +44,23 @@ internal sealed class ReplayTracker
         catch (Exception) { Status = "Saved tracking preferences could not be loaded."; }
         try
         {
-            if (File.Exists(Store)) History = JsonSerializer.Deserialize<List<MatchResult>>(File.ReadAllText(Store)) ?? new();
+            if (File.Exists(Store))
+            {
+                var saved = ReadBackup(Store);
+                History = saved.History;
+                preferences = saved.Tracking;
+            }
+            else
+            {
+                var legacy = Path.Combine(dataDir, "history.json");
+                if (File.Exists(legacy)) History = JsonSerializer.Deserialize<List<MatchResult>>(File.ReadAllText(legacy)) ?? new();
+            }
         }
         catch (Exception ex)
         {
             // Preserve unreadable history before any new scans can overwrite it.
-            if (File.Exists(Store)) File.Copy(Store, Path.Combine(dataDir, $"history-recovery-{DateTime.UtcNow:yyyyMMddHHmmss}.json"), false);
+            var damaged = File.Exists(Store) ? Store : Path.Combine(dataDir, "history.json");
+            if (File.Exists(damaged)) File.Copy(damaged, Path.Combine(dataDir, $"history-recovery-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}.json"), false);
             Status = "History recovery saved. " + ex.Message;
         }
         RememberStartup();
@@ -92,12 +103,11 @@ internal sealed class ReplayTracker
                 if (Stopped) return;
                 file.Refresh();
                 if (!file.Exists || (file.Length, file.LastWriteTimeUtc) != signature) continue;
-                var alreadyKnownMatch = result.ReplayGuid != null && History.Any(r => r.ReplayGuid == result.ReplayGuid);
-                History.RemoveAll(r => r.FilePath.Equals(file.FullName, StringComparison.OrdinalIgnoreCase) || (result.ReplayGuid != null && r.ReplayGuid == result.ReplayGuid));
-                History.Add(result);
-                Directory.CreateDirectory(dataDir);
-                File.WriteAllText(Store + ".tmp", JsonSerializer.Serialize(History));
-                File.Move(Store + ".tmp", Store, true);
+                var alreadyKnownMatch = History.Any(r => SameMatch(r, result));
+                var updated = History.Where(r => !r.FilePath.Equals(file.FullName, StringComparison.OrdinalIgnoreCase) && !SameMatch(r, result)).ToList();
+                updated.Add(result);
+                SaveState(updated, preferences);
+                History = updated;
                 processed[file.FullName] = signature;
                 Changed?.Invoke();
                 if (!alreadyKnownMatch && !startupFiles.Contains(file.FullName) && Valid(result) && InRange(result)) NewMatch?.Invoke(result);
@@ -134,9 +144,7 @@ internal sealed class ReplayTracker
     }
     void SaveTracking()
     {
-        Directory.CreateDirectory(dataDir);
-        var path = Path.Combine(dataDir, "tracking.json");
-        File.WriteAllText(path + ".tmp", JsonSerializer.Serialize(preferences)); File.Move(path + ".tmp", path, true);
+        SaveState(History, preferences);
     }
     public IReadOnlyList<SavedTeammateRow> TeammateRows()
     {

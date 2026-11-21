@@ -67,7 +67,8 @@ public partial class VaultWindow : Wpf.Window
                 IsHitTestVisible = false;
                 AnimationsToggle.IsChecked = false; UpdateMotion();
                 TotalText.Text = targetCount.ToString("N0");
-                if (captureMode is "--capture-squad" or "--capture-controls") SelectPage("playtime");
+                if (captureMode == "--capture-settings") SelectPage("settings");
+                else if (captureMode is "--capture-squad" or "--capture-controls") SelectPage("playtime");
                 else if (captureMode == "--capture-history") SelectPage("history");
                 else if (captureMode == "--capture-personal")
                 {
@@ -120,6 +121,7 @@ public partial class VaultWindow : Wpf.Window
         FolderText.Text = tracker.Folder;
         SettingsStatus.Text = tracker.Status;
         ChooseFolderButton.IsEnabled = ScanButton.IsEnabled = !tracker.Busy;
+        ExportDataButton.IsEnabled = ImportDataButton.IsEnabled = !tracker.Busy;
         var selected = (MatchesGrid.SelectedItem as MatchRow)?.Result.FilePath;
         rows = tracker.VisibleHistory.OrderByDescending(r => r.MatchStartUtc ?? r.LastWriteUtc).Select(r => new MatchRow(r)).ToList();
         MatchesGrid.ItemsSource = rows;
@@ -172,6 +174,32 @@ public partial class VaultWindow : Wpf.Window
         catch (Exception ex) { SettingsStatus.Text = "Could not use that folder: " + ex.Message; }
     }
     async void ScanNow(object sender, Wpf.RoutedEventArgs e) => await tracker.Scan();
+    void ExportData(object sender, Wpf.RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = "Chest Counter backup|*.fchest", DefaultExt = ".fchest", AddExtension = true,
+            FileName = $"Fortnite-Chest-Counter-{DateTime.Now:yyyy-MM-dd}.fchest"
+        };
+        if (dialog.ShowDialog(this) != true) return;
+        try
+        {
+            tracker.ExportData(dialog.FileName);
+            TransferStatus.Text = "Backup saved. Copy it to your other PC and choose Import data there.";
+        }
+        catch (Exception ex) { TransferStatus.Text = "Could not export data: " + ex.Message; }
+    }
+    void ImportData(object sender, Wpf.RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = "Chest Counter backup|*.fchest", CheckFileExists = true };
+        if (dialog.ShowDialog(this) != true) return;
+        try
+        {
+            var added = tracker.ImportData(dialog.FileName);
+            TransferStatus.Text = $"Imported {added:N0} new matches. Start date and teammates saved. Totals are up to date.";
+        }
+        catch (Exception ex) { TransferStatus.Text = "Could not import data: " + ex.Message; }
+    }
     void ExportHistory(object sender, Wpf.RoutedEventArgs e)
     {
         var dialog = new Microsoft.Win32.SaveFileDialog { Filter = "CSV files|*.csv", FileName = "Fortnite-container-counts.csv" };

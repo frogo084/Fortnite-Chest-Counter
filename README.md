@@ -21,6 +21,14 @@ Count the chests you search or break in Fortnite. The tracker reads your saved r
 - Pirate Token odds using your replay counts or numbers you enter.
 - **Experimental teammate tracking.** Save a teammate’s name in Playtime & Squad and double-click it to see shared matches. The tracker counts actions it can attribute from your saved replays. “Not recorded” means the replay did not show an attributable action; it does not establish that the teammate opened zero chests.
 
+## Move data between PCs
+
+1. Run the latest version on your laptop and choose **Settings → Export data**.
+2. Copy the saved `.fchest` file to your desktop, using a USB drive or your preferred file transfer.
+3. On your desktop, choose **Settings → Import data** and select that file.
+
+The backup includes all saved matches, recorded playtime, your count start date, and saved teammates. Import combines both PCs' histories, skips duplicate recordings, and applies the backup's start date. Each PC keeps its own replay folder. Raw replay files are separate from the backup. A copy of the previous data is saved locally as `before-import.fchest` before each import.
+
 ## Privacy
 
 Your replays, saved teammate names, preferences, and match history stay on your PC. The tracker reads replays from disk and stores its own history under `%LOCALAPPDATA%\FortniteLootTracker`.

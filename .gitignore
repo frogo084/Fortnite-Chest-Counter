@@ -10,6 +10,7 @@
 *.pdb
 *.log
 *.json
+*.fchest
 *.lnk
 *.fixture/
 App/

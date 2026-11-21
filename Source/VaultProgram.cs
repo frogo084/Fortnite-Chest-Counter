@@ -6,19 +6,21 @@ internal static class VaultProgram
     [STAThread]
     static void Main(string[] args)
     {
-        if (args.Length == 2 && args[0] == "--capture-squad-sample")
+        if (args.Length == 2 && args[0] is "--capture-squad-sample" or "--capture-settings-sample")
         {
             var capture = Path.GetFullPath(args[1]);
             var fixture = Verification.CheckTracking(capture + ".fixture");
             fixture.SaveTeammate("Another sample teammate");
             fixture.SetCountFrom(new DateTime(2026, 1, 2));
-            new System.Windows.Application().Run(new VaultWindow(fixture, capture, "--capture-squad"));
+            var mode = args[0] == "--capture-settings-sample" ? "--capture-settings" : "--capture-squad";
+            new System.Windows.Application().Run(new VaultWindow(fixture, capture, mode));
             return;
         }
         if (args.Length == 2 && args[0] is "--verify" or "--verify-ui")
         {
             var report = Path.GetFullPath(args[1]);
             ChestReader.SelfCheck(); ReplayTracker.SelfCheck(); LootTracker.TokenOdds.SelfCheck();
+            TransferVerification.Run(report + ".transfer-fixture");
             if (args[0] == "--verify") Verification.Run(report).GetAwaiter().GetResult();
             var application = new System.Windows.Application();
             var directory = report + ".ui-fixture";
@@ -28,7 +30,7 @@ internal static class VaultProgram
             window.VerifyTrackingPanel(fixture);
             window.VerifyOverviewDate(directory);
             window.Close();
-            File.WriteAllText(report + ".ui.txt", "PASS: replay odds, recorded playtime, shared Overview and Playtime date, inclusive totals, restart persistence, All time, and teammate controls using isolated sample data.");
+            File.WriteAllText(report + ".ui.txt", "PASS: replay odds, playtime, date persistence, teammates, legacy data migration, transfer merge, duplicate import, portable paths, invalid import rejection and failed-write recovery using isolated sample data.");
             return;
         }
         if (args.Length == 2 && args[0] is "--capture" or "--capture-forecast" or "--capture-past" or "--capture-history" or "--capture-personal" or "--capture-squad" or "--capture-controls")
